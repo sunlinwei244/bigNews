@@ -62,7 +62,7 @@ changes</button> -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-
+  <script src="./libs/http.js"></script>
   <script>
     $(function () {
       // 给登录按钮设置点击事件
@@ -83,7 +83,8 @@ changes</button> -->
         // 发送ajax请求
         $.ajax({
           type: 'post',
-          url: 'http://localhost:8080/api/v1/admin/user/login',
+          // url: 'http://localhost:8080/api/v1/admin/user/login',
+          url:BigNew.user_login,
           data: {
             username,
             password
@@ -95,7 +96,7 @@ changes</button> -->
             $('#myModal').modal();
             if (backData.code == 200) {
               // 登录成功,把token令牌存入localStorage
-              window.localStorage.setItem('token',backData.token);
+              window.localStorage.setItem('token', backData.token);
               // 此事件在模态框被隐藏之后被触发
               $('#myModal').on('hide.bs.modal', function (e) {
                 // 模态框隐藏后页面跳转
