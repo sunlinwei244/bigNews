@@ -1,9 +1,9 @@
-(function(w){
+;(function(w){
     var baseURL = 'http://localhost:8080/api/v1';
     var BigNew = {
         baseURL:baseURL,//基地址
         user_login:      baseURL + '/admin/user/login',//用户登录
-        BigNew:       baseURL + '/admin/user/info',//用户信息
+        user_info:       baseURL + '/admin/user/info',//用户信息
         user_detail:     baseURL + '/admin/user/detail',//用户详情
         user_edit:       baseURL + '/admin/user/edit',//用户编辑
         category_list:   baseURL + '/admin/category/list',//文章类别查询
@@ -21,7 +21,7 @@
         comment_reject:  baseURL + '/admin/comment/reject',//文章评论不通过
         comment_delete:  baseURL + '/admin/comment/delete',//文章评论删除
     };
-
+    
     // 暴露接口
     w.BigNew = BigNew;
-})(window)
+})(window);

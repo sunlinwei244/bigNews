@@ -90,13 +90,15 @@
         <!-- 右侧主体内容 -->
         <div class="main" id="main_body">
             <!-- iframe标签,src默认是echarts图表的首页 -->
-            <iframe src="./main_count.html" name="main_frame" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+            <iframe src="./main_count.html" name="main_frame" frameborder="0"
+                style="width: 100%;height: 100%;"></iframe>
         </div>
     </div>
 
 
     <script src="./libs/http.js"></script>
     <script>
+
         $(function () {
 
             /* // 原生js发送请求携带token令牌
@@ -115,17 +117,19 @@
             // jQuery发送请求携带token令牌
             $.ajax({
                 type: 'get',
-                url: 'http://localhost:8080/api/v1/admin/user/info',
-                // url:BigNew.user_info,
+                // url: 'http://localhost:8080/api/v1/admin/user/info',
+                url: BigNew.user_info,
                 // 请求头设置token
                 // headers:{
                 //     'Authorization':localStorage.getItem('token')
                 // },
                 success: function (backData) {
                     console.log(backData);
-                    $('.user_info>img').attr('src', backData.data.userPic);
-                    $('.user_info>span>i').text(backData.data.nickname);
-                    $('.user_center_link>img').attr('src', backData.data.userPic);
+                    if (backData.code == 200) {
+                        $('.user_info>img').attr('src', backData.data.userPic);
+                        $('.user_info>span>i').text(backData.data.nickname);
+                        $('.user_center_link>img').attr('src', backData.data.userPic);
+                    }
                 }
             })
 
