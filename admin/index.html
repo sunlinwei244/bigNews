@@ -20,7 +20,7 @@
         <a href="#" class="logo"><img src="images/logo02.png" alt="logo"></a>
         <div class="user_info">
             <img src="images/2.jpg" alt="person">
-            <span>欢迎&nbsp;&nbsp;李思思</span>
+            <span>欢迎&nbsp;&nbsp;<i style="font-style: normal;">李思思</i></span>
             <b>管理员</b>
         </div>
         <!-- 左侧导航栏 -->
@@ -54,5 +54,51 @@
 
         </div>
     </div>
+
+
+    <script>
+        $(function () {
+
+            /* // 原生js发送请求携带token令牌
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', 'http://localhost:8080/api/v1/admin/user/info');
+            // 请求头设置携带token令牌
+            xhr.setRequestHeader('Authorization', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYWRtaW4iLCJleHAiOjIxOTY5OTkyNTEsImlhdCI6MTU5MjE5OTI1MX0.jkUxJXSHoSeKQS3QjnSFqYciBJtnPOS2narcukIRE2IEms_6KyaS60KgDcN5TfJmlx23eFbcuhjd9xU971w2M4lYHdRrnLxQZWAYt1wXvkNHIOx0hVf0FS9Aam7a2LNkSxGPm62qkaHQRc-17pQygMTapFfh5FsyXWyel4umZKs');
+            xhr.onload = function () {
+                var obj = JSON.parse(xhr.response)
+                console.log(obj);
+            }
+            xhr.send(); */
+
+
+            // 一进入页面发送ajax请求,获取用户信息
+            // jQuery发送请求携带token令牌
+            $.ajax({
+                type:'get',
+                url:'http://localhost:8080/api/v1/admin/user/info',
+                // 请求头设置token
+                // headers:{
+                //     'Authorization':localStorage.getItem('token')
+                // },
+                success:function(backData){
+                    console.log(backData);
+                    $('.user_info>img').attr('src',backData.data.userPic);
+                    $('.user_info>span>i').text(backData.data.nickname);
+                    $('.user_center_link>img').attr('src',backData.data.userPic);
+                }
+            })
+
+            // 登出
+            $('.logout').on('click',function(e){
+                e.preventDefault();
+                if(confirm('确定要退出？')){
+                    window.localStorage.removeItem('token');
+                    window.location.href='./login.html';
+                }
+            })
+
+        })
+    </script>
 </body>
+
 </html>
