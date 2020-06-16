@@ -36,7 +36,8 @@
 
             <!-- 文章管理 -->
             <div class="level01">
-                <a href="#">
+                <!-- 该a标签href指向文章列表链接,点击文章管理时,在iframe标签中打开该a标签的列表链接 -->
+                <a href="./article_list.html" target="main_frame">
                     <i class="iconfont icon-icon-article"></i>
                     <span>文章管理</span>
                     <b class="iconfont icon-arrowdownl"></b>
@@ -113,7 +114,7 @@
             xhr.send(); */
 
 
-            // 一进入页面发送ajax请求,获取用户信息
+            // 一、一进入页面发送ajax请求,获取用户信息
             // jQuery发送请求携带token令牌
             $.ajax({
                 type: 'get',
@@ -133,7 +134,7 @@
                 }
             })
 
-            // 登出
+            // 二、登出
             $('.logout').on('click', function (e) {
                 e.preventDefault();
                 if (confirm('确定要退出？')) {
@@ -142,6 +143,31 @@
                     window.location.href = './login.html';
                 }
             })
+
+            // 三、点击右侧导航栏一级菜单(div)
+            $('div.level01').on('click',function(){
+                // 点击的当前为选中颜色
+                $(this).addClass('active').siblings('div').removeClass('active');
+                // 使用索引判断点击的是 "文章管理"
+                if($(this).index() == 1){
+                    // slideToggle方法切换显示与隐藏并且有滑动效果
+                    $('ul.level02').slideToggle();
+                    // toggleClass方法切换添加类名和移除类名
+                    $(this).find('b').toggleClass('rotate0');
+                    // 默认二级菜单中的 "文章列表"为选中颜色
+                    $('ul.level02>li:eq(0)').addClass('active').siblings('li').removeClass('active');
+                }
+            })
+
+            // 四、点击右侧导航栏二级菜单(li)
+            $('.level02>li').on('click',function(){
+                // 点击的当前li为选中颜色
+                $(this).addClass('active').siblings('li').removeClass('active');
+                
+            })
+
+
+
 
         })
     </script>
