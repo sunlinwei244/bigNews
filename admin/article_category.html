@@ -43,6 +43,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
+                            <!-- 设置属性 data-toggle="modal" data-target="#myModal" 用于控制id名为myModal的模态框 -->
                             <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
                                 data-target="#myModal">新增分类</a>
                         </td>
@@ -52,40 +53,89 @@
         </div>
     </div>
 
+    <!-- bootstrap模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New message</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">文章分类名称</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">文章分类别名</label>
+                            <input class="form-control" id="message-text"></input>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btnAddOrEdit" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 准备一个模板 -->
     <script id="category_temp" type="text/html">
         <!-- 遍历接口返回的backData.data,v是遍历出来的每一项 -->
         {{each data v}}
-        <tr>
-            <td>{{v.name}}</td>
-            <td>{{v.slug}}</td>
-            <td class="text-center">
-                <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-                <!-- 删除按钮自定义id -->
-                <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs">删除</a>
-            </td>
-        </tr>
-        {{/each}}
+    <tr>
+        <td>{{v.name}}</td>
+        <td>{{v.slug}}</td>
+        <td class="text-center">
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
+            <!-- 删除按钮自定义id -->
+            <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs">删除</a>
+        </td>
+    </tr>
+    {{/each}}
     </script>
 
     <script src="./libs/http.js"></script>
     <script>
-        $(function(){
+        $(function () {
             // 一、一进入页面发送ajax请求,获取所有文章类别显示在页面内
             $.ajax({
-                type:'get',
-                url:BigNew.category_list,
-                success:function(backData){
-                   if(backData.code == 200){
-                    // 将接口返回的数据用模板引擎渲染到tbody标签中
-                    var resHtml = template('category_temp',backData);
-                    $('tbody').html(resHtml);
-                   } 
+                type: 'get',
+                url: BigNew.category_list,
+                success: function (backData) {
+                    if (backData.code == 200) {
+                        // 将接口返回的数据用模板引擎渲染到tbody标签中
+                        var resHtml = template('category_temp', backData);
+                        $('tbody').html(resHtml);
+                    }
                 }
             })
+        })
+
+        // 二、判断模态框是新增分类按钮弹出的还是编辑按钮
+        // 新增分类按钮和编辑按钮 弹出的模态框是同一个
+        $('#myModal').on('show.bs.modal', function (e) {
+            // show.bs.modal  模态框显示后立即触发该事件
+            // 如果是通过点击某个作为触发器的元素(新增分类按钮和编辑按钮)，
+            // 则此元素(新增分类按钮和编辑按钮)可以通过事件的 relatedTarget 属性进行访问。
+            // console.log(e.relatedTarget);// 点击按钮的dom元素
+            if(e.relatedTarget === $('#xinzengfenlei')[0]){
+                // 新增分类按钮点出的
+                $('#myModalLabel').text('新增类别');
+                $('#btnAddOrEdit').text('新增').addClass('btn-primary').removeClass('btn-success');
+
+            }else{
+                // 编辑按钮点出的
+                $('#myModalLabel').text('编辑类别');
+                $('#btnAddOrEdit').text('编辑').addClass('btn-success').removeClass('btn-primary');
+            }
         })
     </script>
 
 
 </body>
+
 </html>
