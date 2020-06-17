@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>文章列表</title>
+    <title>文章类别管理</title>
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/iconfont.css">
@@ -52,4 +52,40 @@
         </div>
     </div>
 
+    <!-- 准备一个模板 -->
+    <script id="category_temp" type="text/html">
+        <!-- 遍历接口返回的backData.data,v是遍历出来的每一项 -->
+        {{each data v}}
+        <tr>
+            <td>{{v.name}}</td>
+            <td>{{v.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                <!-- 删除按钮自定义id -->
+                <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <script src="./libs/http.js"></script>
+    <script>
+        $(function(){
+            // 一、一进入页面发送ajax请求,获取所有文章类别显示在页面内
+            $.ajax({
+                type:'get',
+                url:BigNew.category_list,
+                success:function(backData){
+                   if(backData.code == 200){
+                    // 将接口返回的数据用模板引擎渲染到tbody标签中
+                    var resHtml = template('category_temp',backData);
+                    $('tbody').html(resHtml);
+                   } 
+                }
+            })
+        })
+    </script>
+
+
+</body>
 </html>
