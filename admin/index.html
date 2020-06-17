@@ -37,7 +37,8 @@
             <!-- 文章管理 -->
             <div class="level01">
                 <!-- 该a标签href指向文章列表链接,点击文章管理时,在iframe标签中打开该a标签的列表链接 -->
-                <a href="./article_list.html" target="main_frame">
+                <!-- <a href="./article_list.html" target="main_frame"> -->
+                <a href="#">
                     <i class="iconfont icon-icon-article"></i>
                     <span>文章管理</span>
                     <b class="iconfont icon-arrowdownl"></b>
@@ -125,7 +126,7 @@
                 //     'Authorization':localStorage.getItem('token')
                 // },
                 success: function (backData) {
-                    console.log(backData);
+                    // console.log(backData);
                     if (backData.code == 200) {
                         $('.user_info>img').attr('src', backData.data.userPic);
                         $('.user_info>span>i').text(backData.data.nickname);
@@ -155,7 +156,12 @@
                     // toggleClass方法切换添加类名和移除类名
                     $(this).find('b').toggleClass('rotate0');
                     // 默认二级菜单中的 "文章列表"为选中颜色
-                    $('ul.level02>li:eq(0)').addClass('active').siblings('li').removeClass('active');
+                    // $('ul.level02>li:eq(0)').trigger('click');
+                    
+                    // 下面这行代码做了两件事:
+                    // 1.事件冒泡。单击 "文章列表"的a标签,事件冒泡到它的父标签li也被单击了。
+                    // 2.点击的a标签,是个dom元素,a既有单击事件,又有超链接跳转。
+                    $('.level02>li:eq(0)>a')[0].click();
                 }
             })
 
