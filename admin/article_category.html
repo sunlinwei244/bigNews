@@ -100,39 +100,84 @@
 
     <script src="./libs/http.js"></script>
     <script>
+        // 入口函数
         $(function () {
             // 一、一进入页面发送ajax请求,获取所有文章类别显示在页面内
-            $.ajax({
-                type: 'get',
-                url: BigNew.category_list,
-                success: function (backData) {
-                    if (backData.code == 200) {
-                        // 将接口返回的数据用模板引擎渲染到tbody标签中
-                        var resHtml = template('category_temp', backData);
-                        $('tbody').html(resHtml);
+            function getData() {
+                $.ajax({
+                    type: 'get',
+                    url: BigNew.category_list,
+                    success: function (backData) {
+                        if (backData.code == 200) {
+                            // 将接口返回的数据用模板引擎渲染到tbody标签中
+                            var resHtml = template('category_temp', backData);
+                            $('tbody').html(resHtml);
+                        }
                     }
+                })
+            }
+            getData();
+
+            // 二、判断模态框是新增分类按钮弹出的还是编辑按钮
+            // 新增分类按钮和编辑按钮 弹出的模态框是同一个
+            $('#myModal').on('show.bs.modal', function (e) {
+                // show.bs.modal  模态框显示后立即触发该事件
+                // 如果是通过点击某个作为触发器的元素(新增分类按钮和编辑按钮)，
+                // 则此元素(新增分类按钮和编辑按钮)可以通过事件的 relatedTarget 属性进行访问。
+                // console.log(e.relatedTarget);// 点击按钮的dom元素
+                if (e.relatedTarget === $('#xinzengfenlei')[0]) {
+                    // 新增分类按钮点出的
+                    $('#myModalLabel').text('新增类别');
+                    $('#btnAddOrEdit').text('新增').addClass('btn-primary').removeClass('btn-success');
+
+                } else {
+                    // 编辑按钮点出的
+                    $('#myModalLabel').text('编辑类别');
+                    $('#btnAddOrEdit').text('编辑').addClass('btn-success').removeClass('btn-primary');
                 }
             })
+
+            // 三、点击弹出的模态框中的 新增/编辑按钮
+            $('#btnAddOrEdit').on('click', function () {
+                // 判断 是新增/编辑按钮
+                if ($(this).hasClass('btn-primary')) {
+                    // alert('新增按钮');
+                    // 获取文章分类名称和分类别名
+                    var categoryName = $('#recipient-name').val().trim();
+                    var categorySlug = $('#message-text').val().trim();
+                    // 发送ajax请求,新增文章类别
+                    $.ajax({
+                        type: 'post',
+                        url: BigNew.category_add,
+                        data: {
+                            name: categoryName,
+                            slug: categorySlug
+                        },
+                        success: function (backData) {
+                            if (backData.code == 201) {
+                                alert('新增成功！');
+                                // 发送ajax,更新页面文章类别数据
+                                getData();
+                                // 隐藏模态框
+                                $('#myModal').modal('hide');
+                                // 清空input输入框
+                                $('#recipient-name').val('');
+                                $('#message-text').val('');
+                            }
+                        }
+                    })
+
+                } else {
+                    // alert('编辑按钮')
+                }
+            })
+
+
+
+
         })
 
-        // 二、判断模态框是新增分类按钮弹出的还是编辑按钮
-        // 新增分类按钮和编辑按钮 弹出的模态框是同一个
-        $('#myModal').on('show.bs.modal', function (e) {
-            // show.bs.modal  模态框显示后立即触发该事件
-            // 如果是通过点击某个作为触发器的元素(新增分类按钮和编辑按钮)，
-            // 则此元素(新增分类按钮和编辑按钮)可以通过事件的 relatedTarget 属性进行访问。
-            // console.log(e.relatedTarget);// 点击按钮的dom元素
-            if(e.relatedTarget === $('#xinzengfenlei')[0]){
-                // 新增分类按钮点出的
-                $('#myModalLabel').text('新增类别');
-                $('#btnAddOrEdit').text('新增').addClass('btn-primary').removeClass('btn-success');
 
-            }else{
-                // 编辑按钮点出的
-                $('#myModalLabel').text('编辑类别');
-                $('#btnAddOrEdit').text('编辑').addClass('btn-success').removeClass('btn-primary');
-            }
-        })
     </script>
 
 
