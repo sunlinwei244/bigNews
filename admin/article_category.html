@@ -64,6 +64,8 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <!-- 隐藏域 存储要编辑的文章类别id -->
+                        <input type="hidden" name="" id="categoryId">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">文章分类名称</label>
                             <input type="text" class="form-control" id="recipient-name">
@@ -90,7 +92,7 @@
         <td>{{v.name}}</td>
         <td>{{v.slug}}</td>
         <td class="text-center">
-            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
+            <a href="javascript:void(0)" data-id="{{v.id}}" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
             <!-- 删除按钮自定义id -->
             <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs">删除</a>
         </td>
@@ -134,6 +136,16 @@
                     // 编辑按钮点出的
                     $('#myModalLabel').text('编辑类别');
                     $('#btnAddOrEdit').text('编辑').addClass('btn-success').removeClass('btn-primary');
+
+                    // 获取文章分类名称、分类别名、分类id
+                    var categoryName = $(e.relatedTarget).parent().prev().prev().text();
+                    var categorySlug = $(e.relatedTarget).parent().prev().text();
+                    var categoryId = $(e.relatedTarget).attr('data-id');
+                    // 在对应标签内显示 分类名称、别名、id
+                    $('#recipient-name').val(categoryName);
+                    $('#message-text').val(categorySlug);
+                    $('#categoryId').val(categoryId);
+
                 }
             })
 
@@ -169,6 +181,29 @@
 
                 } else {
                     // alert('编辑按钮')
+                    // 获取要编辑的 文章分类名称、别名、id
+                    var categoryName = $('#recipient-name').val().trim();
+                    var categorySlug = $('#message-text').val().trim();
+                    var categoryId = $('#categoryId').val().trim();
+                    $.ajax({
+                        type:'post',
+                        url:BigNew.category_edit,
+                        data:{
+                            id:categoryId,
+                            name:categoryName,
+                            slug:categorySlug
+                        },
+                        success:function(backData){
+                            // console.log(backData);
+                            if(backData.code == 200){
+                                alert('编辑成功！');
+                                // 发送ajax,更新页面文章类别数据
+                                getData();
+                                // 隐藏模态框
+                                $('#myModal').modal('hide');
+                            }
+                        }
+                    })
                 }
             })
 
