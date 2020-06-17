@@ -94,7 +94,7 @@
         <td class="text-center">
             <a href="javascript:void(0)" data-id="{{v.id}}" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
             <!-- 删除按钮自定义id -->
-            <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs">删除</a>
+            <a href="javascript:void(0)" data-id="{{v.id}}" class="btn btn-danger btn-xs btn-delete">删除</a>
         </td>
     </tr>
     {{/each}}
@@ -206,6 +206,41 @@
                     })
                 }
             })
+
+            // 四、删除文章类别
+            // 因为数据是动态生成的,所以用委托注册
+            $('tbody').on('click','.btn-delete',function(){
+                var that = $(this); // 用变量保存删除按钮
+                if(confirm('确定要删除?')){
+                    var categoryId = $(this).attr('data-id');
+                    $.ajax({
+                        type:'post',
+                        url:BigNew.category_delete,
+                        data:{
+                            id:categoryId
+                        },
+                        success:function(backData){
+                            // console.log(backData);
+                            if(backData.code == 204){
+                                alert('删除成功！');
+
+                                // 三种方法更新数据的效果
+                                // 法一：移除当前行
+                                // that.parent().parent().remove();
+
+                                // 法二：刷新父页面(用户体验不好)
+                                // parent.window.location.reload();
+
+                                 // 法三：发送ajax,重载文章类别数据
+                                getData();
+
+                            }
+                        }
+                    })
+                }
+            })
+
+
 
 
 
