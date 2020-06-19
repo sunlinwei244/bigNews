@@ -65,14 +65,14 @@
                 <div class="modal-body">
                     <form>
                         <!-- 隐藏域 存储要编辑的文章类别id -->
-                        <input type="hidden" name="" id="categoryId">
+                        <input type="hidden" name="id" id="categoryId">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">文章分类名称</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <input type="text" class="form-control" name="name" id="recipient-name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">文章分类别名</label>
-                            <input class="form-control" id="message-text"></input>
+                            <input class="form-control" name="slug" id="message-text"></input>
                         </div>
                     </form>
                 </div>
@@ -187,17 +187,24 @@
                 } else {
                     // alert('编辑按钮')
                     // 获取要编辑的 文章分类名称、别名、id
-                    var categoryName = $('#recipient-name').val().trim();
-                    var categorySlug = $('#message-text').val().trim();
-                    var categoryId = $('#categoryId').val().trim();
+                    // var categoryName = $('#recipient-name').val().trim();
+                    // var categorySlug = $('#message-text').val().trim();
+                    // var categoryId = $('#categoryId').val().trim();
+
+                    // 上面三行代码可以用jquery的一个方法实现
+                    // jquery有一个方法,serialize()方法,可以获取form表单中带有name属性的标签的值
+                    var data = $('#myModal form').serialize(); //key1=value1&key2=value2
+
                     $.ajax({
                         type: 'post',
                         url: BigNew.category_edit,
-                        data: {
-                            id: categoryId,
-                            name: categoryName,
-                            slug: categorySlug
-                        },
+                        // data: {
+                        //     id: categoryId,
+                        //     name: categoryName,
+                        //     slug: categorySlug
+                        // },
+                        // 参数使用serialize方法得到的值
+                        data:data,
                         success: function (backData) {
                             // console.log(backData);
                             if (backData.code == 200) {
